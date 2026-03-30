@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { DailySimulation, stageVisual } from '../lib/ml';
+import { useLanguage } from '../lib/i18n';
 
 interface CropSimulationProps {
   current?: DailySimulation;
@@ -15,16 +16,17 @@ function healthColor(health: number) {
   return '#9c6644';
 }
 
-function stageLabel(stage: string) {
-  if (stage === 'seed') return 'Seed';
-  if (stage === 'growing') return 'Growing';
-  if (stage === 'healthy') return 'Healthy';
-  if (stage === 'mature') return 'Mature';
-  if (stage === 'dry') return 'Dry';
-  return 'Dead';
+function stageLabel(stage: string, t: any) {
+  if (stage === 'seed') return t.seed;
+  if (stage === 'growing') return t.growing;
+  if (stage === 'healthy') return t.healthy;
+  if (stage === 'mature') return t.mature;
+  if (stage === 'dry') return t.dry;
+  return t.dead;
 }
 
 export default function CropSimulation({ current, currentDay, totalDays }: CropSimulationProps) {
+  const { t } = useLanguage();
   const stage = current?.stage ?? 'seed';
   const health = current?.cropHealth ?? 58;
   const visual = stageVisual(stage);
@@ -35,8 +37,8 @@ export default function CropSimulation({ current, currentDay, totalDays }: CropS
       <div className="absolute inset-0 opacity-40 [background:radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.8),transparent_50%),radial-gradient(circle_at_80%_30%,rgba(56,189,248,0.35),transparent_40%)]" />
 
       <div className="relative z-10">
-        <h2 className="text-xl font-bold text-zinc-900">Simulation View</h2>
-        <p className="mt-1 text-sm text-zinc-700">Seed to maturity based on rainfall and stress.</p>
+        <h2 className="text-xl font-bold text-zinc-900">{t.simulationView}</h2>
+        <p className="mt-1 text-sm text-zinc-700">{t.seedToMaturity}</p>
 
         <div className="mt-8 flex min-h-[280px] items-end justify-center">
           <motion.div
@@ -93,7 +95,7 @@ export default function CropSimulation({ current, currentDay, totalDays }: CropS
 
               {stage === 'mature' ? <div className="absolute bottom-[70%] h-6 w-6 rounded-full bg-amber-300 ring-2 ring-amber-500" /> : null}
             </motion.div>
-            <p className="mt-3 text-sm font-semibold text-zinc-800">{stageLabel(stage)}</p>
+            <p className="mt-3 text-sm font-semibold text-zinc-800">{stageLabel(stage, t)}</p>
           </motion.div>
         </div>
 

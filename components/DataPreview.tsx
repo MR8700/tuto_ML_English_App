@@ -2,6 +2,7 @@
 
 import { UploadedData } from '../lib/dataset';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useLanguage } from '../lib/i18n';
 
 interface Props {
   data: UploadedData[] | null;
@@ -9,15 +10,16 @@ interface Props {
 }
 
 export default function DataPreview({ data, onLoadSample }: Props) {
+  const { t } = useLanguage();
   if (!data || data.length === 0) {
     return (
       <div className="bg-white/70 backdrop-blur-md p-8 rounded-2xl shadow-xl text-center border-2 border-dashed border-gray-300">
-        <p className="text-gray-500 mb-4">No data uploaded yet</p>
+        <p className="text-gray-500 mb-4">{t.noDataUploaded}</p>
         <button 
           onClick={onLoadSample}
           className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
         >
-          Load Sample Data
+          {t.loadSampleData}
         </button>
       </div>
     );
@@ -34,8 +36,8 @@ export default function DataPreview({ data, onLoadSample }: Props) {
   return (
     <div className="bg-white/70 backdrop-blur-md p-6 rounded-2xl shadow-xl space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-bold text-gray-800">Uploaded Data Preview ({data.length} rows)</h3>
-        <span className="text-sm text-emerald-600 font-semibold">Avg Rain: {avgRain} mm</span>
+        <h3 className="text-xl font-bold text-gray-800">{t.uploadedDataPreview} ({data.length} {t.rows})</h3>
+        <span className="text-sm text-emerald-600 font-semibold">{t.avgRain}: {avgRain} mm</span>
       </div>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={chartData}>

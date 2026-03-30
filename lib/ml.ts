@@ -100,8 +100,8 @@ function clamp(value: number, min: number, max: number) {
 }
 
 function categorizeYield(value: number): YieldCategory {
-  if (value < 1.2) return 'Low';
-  if (value < 2.2) return 'Medium';
+  if (value < 1.5) return 'Low';
+  if (value < 3.0) return 'Medium';
   return 'High';
 }
 
@@ -195,9 +195,10 @@ function projectYield(
   const elapsed = Math.max(1, day + 1);
   const projectedSeasonRain = (cumulativeRain / elapsed) * seasonLength;
   const baseline = model.predict(projectedSeasonRain);
-  const healthFactor = 0.55 + health / 180;
-  const soilFactor = 0.75 + soilQuality / 400;
-  const predicted = clamp(Number((baseline * healthFactor * soilFactor).toFixed(2)), 0, 4.5);
+  const healthFactor = 0.4 + health / 200; // Réduit l'impact de la santé
+  const soilFactor = 0.6 + soilQuality / 500; // Réduit l'impact du sol
+  const progressFactor = Math.min(1, elapsed / (seasonLength * 0.7)); // Facteur de progression saisonnière
+  const predicted = clamp(Number((baseline * healthFactor * soilFactor * progressFactor).toFixed(2)), 0, 6.0); // Augmenté le max à 6.0
 
   return {
     predicted,
